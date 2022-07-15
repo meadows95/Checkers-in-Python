@@ -50,8 +50,6 @@ board.populate_board()
 
 game = Game(board)
 
-board.move_checker(board.cells[0], board.cells[1])
-
 # -------- Main Program Loop -----------
 while not done:
     current_time = time.time()

@@ -46,8 +46,10 @@ class Board():
                 # when adding (end = "") as a parameter, it will print on the same line
                 print(cell.occupant + " ", end="")
 
+    # Moves 1 checker from one cell to another
     def move_checker(self, from_cell, to_cell):
-        pass
+        to_cell.occupant = from_cell.occupant
+        from_cell.occupant = None
 
     # def count_mines(self):
     #     number_of_mines = 0
