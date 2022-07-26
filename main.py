@@ -63,7 +63,6 @@ while not done:
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             done = True  # Flag that we are done so we exit this loop
-
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # User clicks the mouse. Get the position
             pos = pygame.mouse.get_pos()
@@ -76,13 +75,8 @@ while not done:
             clicked_cell = board.find_cell_by_x_and_y_grid_coordinates(
                 cell_x, cell_y)
 
-            # Set clicked_cell hidden value to false
-            # if clicked_cell != None and not mine_clicked and not game1.did_player_win():
-            #     if not has_started_stopwatch:
-            #         has_started_stopwatch = True
-            #         start_time = time.time()
-            #         # do whatever to start the stopwatch
-            #     clicked_cell.hidden = False
+            if clicked_cell:
+                board.cell_clicked(clicked_cell, game.player_turn)
 
         elif event.type == pygame.KEYDOWN:
             pass
@@ -93,9 +87,7 @@ while not done:
     # Set the screen background
     screen.fill(DARKGREEN)
 
-    for cell in board.cells:
-        cell.draw(screen, screen_width, screen_height, CELL_FONT, board.length)
-
+    board.draw(screen, screen_width, screen_height, CELL_FONT, board.length)
     game.show_player_turn(screen)
 
     # if mine_clicked:
