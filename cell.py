@@ -6,6 +6,8 @@ BLACK = (0, 0, 0)
 GAMEBOARD_COLOR = (66, 135, 245)
 # light blue
 NOT_GAMEBOARD_COLOR = (176, 222, 247)
+# light blue
+SELECTED_CELL_COLOR = (255, 255, 0)
 
 # This sets the margin between each cell
 DISTANCE_BETWEEN_CELLS = 8
@@ -33,8 +35,8 @@ class Cell():
         else:
             return True
 
-    def draw(self, screen, screen_width, screen_height, font, board_length):
-        cell_side_length = ((screen_height - 80) // board_length) - \
+    def draw(self, screen, screen_width, screen_height, font, board_length, is_selected_cell):
+        cell_side_length = (screen_height // board_length) - \
             DISTANCE_BETWEEN_CELLS
         width_of_grid = cell_side_length * board_length + \
             ((board_length - 1) * DISTANCE_BETWEEN_CELLS)
@@ -47,7 +49,7 @@ class Cell():
 
         rect_obj = self.draw_rectangle(
             screen,
-            self.color,
+            self.color if not is_selected_cell else SELECTED_CELL_COLOR,
             x_pixel_pos,
             y_pixel_pos,
             cell_side_length)
@@ -74,3 +76,9 @@ class Cell():
         #         HIDDEN_BORDER_COLOR_DARK,
         #         [x_position - 0, y_position - 0, cell_side_length, cell_side_length],
         #         2)
+
+    def __eq__(self, other):
+        if not other:
+            return False
+
+        return self.x == other.x and self.y == other.y

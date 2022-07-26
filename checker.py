@@ -18,7 +18,10 @@ class Checker():
         self.color = BLACK if self.player == 1 else RED
 
     def draw(self, screen, cell_x, cell_y, cell_side_length):
-        radius = (cell_side_length / 2) - 3
+        radius = (cell_side_length / 2) - 7
         pygame.draw.circle(screen, self.color,
                            [cell_x + (cell_side_length / 2), cell_y + (cell_side_length / 2)], radius, 0)
         # pygame.display.update()
+
+    def __str__(self):
+        return "Checker belonging to player " + str(self.player)
