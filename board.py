@@ -11,14 +11,12 @@ class Board():
     # properties:
     # cells: list
     # length: number
-    # selected_cell: Cell or None
 
     def __init__(self, length):
         if length % 2 is not 0:
             raise Exception("Board length must be even")
         self.cells = []
         self.length = length
-        self.selected_cell = None
         # list of cells used to make the grid
         for y in range(self.length):
             for x in range(self.length):
@@ -49,33 +47,6 @@ class Board():
                 # when adding (end = "") as a parameter, it will print on the same line
                 print(cell.occupant + " ", end="")
 
-    def cell_clicked(self, clicked_cell, player_turn):
-        if self.selected_cell == None:
-            if clicked_cell.is_playable() and clicked_cell.occupant and clicked_cell.occupant.player == player_turn:
-                self.selected_cell = clicked_cell
-        else:
-            if clicked_cell.occupant and clicked_cell.occupant.player == player_turn:
-                self.selected_cell = clicked_cell
-                return
-
-            if self.validate_move_checker(self.selected_cell, clicked_cell, player_turn):
-                self.move_checker(self.selected_cell, clicked_cell)
-                self.selected_cell = None
-        # Moves 1 checker from one cell to another
-
-    def validate_move_checker(self, from_cell, to_cell, player_turn):
-        if not from_cell.is_playable() or not to_cell.is_playable():
-            return False
-        if from_cell == to_cell:
-            return False
-        if to_cell.occupant != None:
-            return False
-        return True
-
-    def move_checker(self, from_cell, to_cell):
-        to_cell.occupant = from_cell.occupant
-        from_cell.occupant = None
-
     # def count_mines(self):
     #     number_of_mines = 0
     #     for cell in self.cells:
@@ -94,8 +65,8 @@ class Board():
                 return False
         return True
 
-    def draw(self, screen, screen_width, screen_height, font, board_length):
+    def draw(self, screen, screen_width, screen_height, font, selected_cell):
         for cell in self.cells:
-            is_selected_cell = (cell == self.selected_cell)
+            is_selected_cell = (cell == selected_cell)
             cell.draw(screen, screen_width, screen_height,
-                      font, board_length, is_selected_cell)
+                      font, self.length, is_selected_cell)

@@ -76,7 +76,7 @@ while not done:
                 cell_x, cell_y)
 
             if clicked_cell:
-                board.cell_clicked(clicked_cell, game.player_turn)
+                game.cell_clicked(clicked_cell)
 
         elif event.type == pygame.KEYDOWN:
             pass
@@ -87,8 +87,7 @@ while not done:
     # Set the screen background
     screen.fill(DARKGREEN)
 
-    board.draw(screen, screen_width, screen_height, CELL_FONT, board.length)
-    game.show_player_turn(screen)
+    game.draw(screen, screen_width, screen_height, CELL_FONT)
 
     # if mine_clicked:
     #     display_end_game_text(screen, screen_width, screen_height, False)
