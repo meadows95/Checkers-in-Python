@@ -36,6 +36,8 @@ class Game():
             return False
         if to_cell.occupant != None:
             return False
+        if (not from_cell.occupant.is_queen and self.player_turn == 1 and (from_cell.y > to_cell.y or from_cell.y == to_cell.y)) or (not from_cell.occupant.is_queen and self.player_turn == 2 and (from_cell.y < to_cell.y or from_cell.y == to_cell.y)):
+            return False
         return True
 
     def cell_clicked(self, clicked_cell):
