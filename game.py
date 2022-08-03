@@ -27,7 +27,6 @@ class Game():
     def move_checker(self, from_cell, to_cell):
         to_cell.occupant = from_cell.occupant
         from_cell.occupant = None
-        self.player_turn = 1 if self.player_turn == 2 else 2
 
     def validate_move_checker(self, from_cell, to_cell):
         if not from_cell.is_playable() or not to_cell.is_playable():
@@ -36,9 +35,20 @@ class Game():
             return False
         if to_cell.occupant != None:
             return False
-        if (not from_cell.occupant.is_queen and self.player_turn == 1 and (from_cell.y > to_cell.y or from_cell.y == to_cell.y)) or (not from_cell.occupant.is_queen and self.player_turn == 2 and (from_cell.y < to_cell.y or from_cell.y == to_cell.y)):
+        if (not from_cell.occupant.is_queen and self.player_turn == 1 and (from_cell.y > to_cell.y)):
+            return False
+        if (not from_cell.occupant.is_queen and self.player_turn == 2 and (from_cell.y < to_cell.y)):
+            return False
+        if from_cell.y == to_cell.y:
             return False
         return True
+
+    def potentially_make_a_queen(self, to_cell):
+        checker = to_cell.occupant
+        if self.player_turn == 1 and to_cell.y == self.board.length - 1:
+            checker.is_queen = True
+        if self.player_turn == 2 and to_cell.y == 0:
+            checker.is_queen = True
 
     def cell_clicked(self, clicked_cell):
         if self.selected_cell == None:
@@ -51,6 +61,8 @@ class Game():
 
             if self.validate_move_checker(self.selected_cell, clicked_cell):
                 self.move_checker(self.selected_cell, clicked_cell)
+                self.potentially_make_a_queen(clicked_cell)
+                self.player_turn = 1 if self.player_turn == 2 else 2
                 self.selected_cell = None
 
     def show_player_turn(self, screen):
