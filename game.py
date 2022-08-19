@@ -28,20 +28,65 @@ class Game():
         to_cell.occupant = from_cell.occupant
         from_cell.occupant = None
 
-    def validate_move_checker(self, from_cell, to_cell):
-        if not from_cell.is_playable() or not to_cell.is_playable():
-            return False
-        if from_cell == to_cell:
-            return False
-        if to_cell.occupant != None:
-            return False
-        if (not from_cell.occupant.is_queen and self.player_turn == 1 and (from_cell.y > to_cell.y)):
-            return False
-        if (not from_cell.occupant.is_queen and self.player_turn == 2 and (from_cell.y < to_cell.y)):
-            return False
-        if from_cell.y == to_cell.y:
-            return False
-        return True
+# returns a list of possible to_cells
+    def get_possible_destinations_from_cell(self, from_cell):
+        if from_cell.occupant == None:
+            return []
+        possible_destinations = []
+        for cell in self.board.cells:
+            is_upper_left = cell.x == from_cell.x - 1 and cell.y == from_cell.y + 1
+            is_lower_left = cell.x == from_cell.x - 1 and cell.y == from_cell.y - 1
+            is_upper_right = cell.x == from_cell.x + 1 and cell.y == from_cell.y + 1
+            is_lower_right = cell.x == from_cell.x + 1 and cell.y == from_cell.y - 1
+
+            is_upper_left_2_out = cell.x == from_cell.x - 2 and cell.y == from_cell.y + 2
+            is_lower_left_2_out = cell.x == from_cell.x - 2 and cell.y == from_cell.y - 2
+            is_upper_right_2_out = cell.x == from_cell.x + 2 and cell.y == from_cell.y + 2
+            is_lower_right_2_out = cell.x == from_cell.x + 2 and cell.y == from_cell.y - 2
+
+            is_upper_left_1_out = self.board.find_cell_by_x_and_y_grid_coordinates(
+                from_cell.x - 1, from_cell.y + 1)
+            is_lower_left_1_out = self.board.find_cell_by_x_and_y_grid_coordinates(
+                from_cell.x - 1, from_cell.y - 1)
+            is_upper_right_1_out = self.board.find_cell_by_x_and_y_grid_coordinates(
+                from_cell.x + 1, from_cell.y + 1)
+            is_lower_right_1_out = self.board.find_cell_by_x_and_y_grid_coordinates(
+                from_cell.x + 1, from_cell.y - 1)
+
+            if is_upper_left and cell.occupant == None:
+                # adding upper left diagonal neighbor
+                if from_cell.occupant.is_queen or from_cell.occupant.player == 1:
+                    possible_destinations.append(cell)
+            elif is_lower_left and cell.occupant == None:
+                # adding lower left diagonal neighbor
+                if from_cell.occupant.is_queen or from_cell.occupant.player == 2:
+                    possible_destinations.append(cell)
+            elif is_upper_right and cell.occupant == None:
+                # adding upper right diagonal neighbor
+                if from_cell.occupant.is_queen or from_cell.occupant.player == 1:
+                    possible_destinations.append(cell)
+            elif is_lower_right and cell.occupant == None:
+                # adding lower right diagonal neighbor
+                if from_cell.occupant.is_queen or from_cell.occupant.player == 2:
+                    possible_destinations.append(cell)
+
+            elif is_upper_left_2_out and cell.occupant == None and (is_upper_left_1_out.occupant != None and is_upper_left_1_out.occupant.player != self.player_turn):
+                # adding upper left diagonal neighbor
+                if from_cell.occupant.is_queen or from_cell.occupant.player == 1:
+                    possible_destinations.append(cell)
+            elif is_lower_left_2_out and cell.occupant == None and (is_lower_left_1_out.occupant != None and is_lower_left_1_out.occupant.player != self.player_turn):
+                # adding lower left diagonal neighbor
+                if from_cell.occupant.is_queen or from_cell.occupant.player == 2:
+                    possible_destinations.append(cell)
+            elif is_upper_right_2_out and cell.occupant == None and (is_upper_right_1_out.occupant != None and is_upper_right_1_out.occupant.player != self.player_turn):
+                # adding upper right diagonal neighbor
+                if from_cell.occupant.is_queen or from_cell.occupant.player == 1:
+                    possible_destinations.append(cell)
+            elif is_lower_right_2_out and cell.occupant == None and (is_lower_right_1_out.occupant != None and is_lower_right_1_out.occupant.player != self.player_turn):
+                # adding lower right diagonal neighbor
+                if from_cell.occupant.is_queen or from_cell.occupant.player == 2:
+                    possible_destinations.append(cell)
+        return possible_destinations
 
     def potentially_make_a_queen(self, to_cell):
         checker = to_cell.occupant
@@ -59,7 +104,10 @@ class Game():
                 self.selected_cell = clicked_cell
                 return
 
-            if self.validate_move_checker(self.selected_cell, clicked_cell):
+            destinations = self.get_possible_destinations_from_cell(
+                self.selected_cell)
+
+            if clicked_cell in destinations:
                 self.move_checker(self.selected_cell, clicked_cell)
                 self.potentially_make_a_queen(clicked_cell)
                 self.player_turn = 1 if self.player_turn == 2 else 2
