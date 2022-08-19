@@ -58,6 +58,7 @@ class Board():
         for cell in self.cells:
             if cell.x == cell_x and cell.y == cell_y:
                 return cell
+        return None
 
     def did_player_win(self):
         for cell in self.cells:

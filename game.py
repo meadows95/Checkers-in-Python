@@ -28,6 +28,9 @@ class Game():
         to_cell.occupant = from_cell.occupant
         from_cell.occupant = None
 
+        self.potentially_make_a_queen(to_cell)
+        self.potentially_remove_checker(to_cell, from_cell)
+
 # returns a list of possible to_cells
     def get_possible_destinations_from_cell(self, from_cell):
         if from_cell.occupant == None:
@@ -88,6 +91,17 @@ class Game():
                     possible_destinations.append(cell)
         return possible_destinations
 
+    def potentially_remove_checker(self, to_cell, from_cell):
+        middle_cell_x = (from_cell.x + to_cell.x) / 2
+        middle_cell_y = (from_cell.y + to_cell.y) / 2
+        middle_cell = self.board.find_cell_by_x_and_y_grid_coordinates(
+            middle_cell_x, middle_cell_y)
+        if middle_cell == None:
+            return
+
+        if middle_cell.occupant.player != self.player_turn:
+            middle_cell.occupant = None
+
     def potentially_make_a_queen(self, to_cell):
         checker = to_cell.occupant
         if self.player_turn == 1 and to_cell.y == self.board.length - 1:
@@ -109,7 +123,6 @@ class Game():
 
             if clicked_cell in destinations:
                 self.move_checker(self.selected_cell, clicked_cell)
-                self.potentially_make_a_queen(clicked_cell)
                 self.player_turn = 1 if self.player_turn == 2 else 2
                 self.selected_cell = None
 
