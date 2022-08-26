@@ -18,11 +18,15 @@ class Game():
         self.player_turn = random.randrange(1, 3)
         self.board = board
         self.selected_cell = None
+        self.winner = None
 
     def draw(self, screen, screen_width, screen_height, cell_font):
         self.board.draw(screen, screen_width, screen_height,
                         cell_font, self.selected_cell)
-        self.show_player_turn(screen)
+        if self.winner != None:
+            self.player_wins_text(screen)
+        else:
+            self.show_player_turn(screen)
 
     def move_checker(self, from_cell, to_cell):
         to_cell.occupant = from_cell.occupant
@@ -30,6 +34,7 @@ class Game():
 
         self.potentially_make_a_queen(to_cell)
         self.potentially_remove_checker(to_cell, from_cell)
+        self.check_for_winner()
 
 # returns a list of possible to_cells
     def get_possible_destinations_from_cell(self, from_cell):
@@ -126,13 +131,43 @@ class Game():
                 self.player_turn = 1 if self.player_turn == 2 else 2
                 self.selected_cell = None
 
-    def show_player_turn(self, screen):
+    def check_for_winner(self):
+        player_1_count = 0
+        player_2_count = 0
+        for cell in self.board.cells:
+            if cell.occupant == None:
+                continue
 
+            if cell.occupant.player == 1:
+                player_1_count = player_1_count + 1
+            if cell.occupant.player == 2:
+                player_2_count = player_2_count + 1
+        if player_1_count == 0:
+            self.winner = 2
+        elif player_2_count == 0:
+            self.winner = 2
+
+    def show_player_turn(self, screen):
         font = pygame.font.Font('freesansbold.ttf', 30)
         # create a text surface object,
         # on which text is drawn on it.
         text = font.render('Player turn: ' +
                            str(self.player_turn), True, BLACK, WHITE)
+
+        # create a rectangular object for the
+        # text surface object
+        rect = pygame.Rect(40, 40, 140, 32)
+
+        # set the center of the rectangular object.
+        rect.center = (70, 20)
+        screen.blit(text, rect)
+
+    def player_wins_text(self, screen):
+        font = pygame.font.Font('freesansbold.ttf', 30)
+        # create a text surface object,
+        # on which text is drawn on it.
+        text = font.render('Winner: ' +
+                           str(self.winner), True, BLACK, WHITE)
 
         # create a rectangular object for the
         # text surface object
