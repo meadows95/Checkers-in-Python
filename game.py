@@ -20,6 +20,9 @@ class Game():
         self.selected_cell = None
         self.winner = None
 
+        if self.player_turn == 1:
+            self.make_computer_turn()
+
     def draw(self, screen, screen_width, screen_height, cell_font):
         self.board.draw(screen, screen_width, screen_height,
                         cell_font, self.selected_cell)
@@ -35,6 +38,7 @@ class Game():
         self.potentially_make_a_queen(to_cell)
         self.potentially_remove_checker(to_cell, from_cell)
         self.check_for_winner()
+        self.player_turn = 1 if self.player_turn == 2 else 2
 
 # returns a list of possible to_cells
     def get_possible_destinations_from_cell(self, from_cell):
@@ -77,7 +81,6 @@ class Game():
                 # adding lower right diagonal neighbor
                 if from_cell.occupant.is_queen or from_cell.occupant.player == 2:
                     possible_destinations.append(cell)
-
             elif is_upper_left_2_out and cell.occupant == None and (is_upper_left_1_out.occupant != None and is_upper_left_1_out.occupant.player != self.player_turn):
                 # adding upper left diagonal neighbor
                 if from_cell.occupant.is_queen or from_cell.occupant.player == 1:
@@ -95,6 +98,16 @@ class Game():
                 if from_cell.occupant.is_queen or from_cell.occupant.player == 2:
                     possible_destinations.append(cell)
         return possible_destinations
+
+    def make_computer_turn(self):
+        for cell in self.board.cells:
+            if cell.occupant and cell.occupant.player == 1:
+                possible_destinations = self.get_possible_destinations_from_cell(
+                    cell)
+                if len(possible_destinations) > 0:
+                    destination_cell = possible_destinations[0]
+                    self.move_checker(cell, destination_cell)
+                    return
 
     def potentially_remove_checker(self, to_cell, from_cell):
         middle_cell_x = (from_cell.x + to_cell.x) / 2
@@ -128,7 +141,7 @@ class Game():
 
             if clicked_cell in destinations:
                 self.move_checker(self.selected_cell, clicked_cell)
-                self.player_turn = 1 if self.player_turn == 2 else 2
+                self.make_computer_turn()
                 self.selected_cell = None
 
     def check_for_winner(self):
