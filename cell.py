@@ -1,3 +1,4 @@
+from config import *
 import math
 import pygame
 
@@ -8,9 +9,6 @@ GAMEBOARD_COLOR = (66, 135, 245)
 NOT_GAMEBOARD_COLOR = (176, 222, 247)
 # light blue
 SELECTED_CELL_COLOR = (255, 255, 0)
-
-# This sets the margin between each cell
-DISTANCE_BETWEEN_CELLS = 8
 
 
 class Cell():
@@ -54,8 +52,20 @@ class Cell():
             y_pixel_pos,
             cell_side_length)
 
+    def draw_occupant(self, screen, screen_width, screen_height, font, board_length, is_selected_cell):
+        cell_side_length = (screen_height // board_length) - \
+            DISTANCE_BETWEEN_CELLS
+        width_of_grid = cell_side_length * board_length + \
+            ((board_length - 1) * DISTANCE_BETWEEN_CELLS)
+        margin = math.floor((screen_width - width_of_grid) / 2)
+
+        x_pixel_pos = (DISTANCE_BETWEEN_CELLS + cell_side_length) * \
+            self.x + DISTANCE_BETWEEN_CELLS + margin
+        y_pixel_pos = (DISTANCE_BETWEEN_CELLS + cell_side_length) * \
+            self.y + DISTANCE_BETWEEN_CELLS
+
         if self.occupant != None:
-            self.occupant.draw(screen, x_pixel_pos,
+            self.occupant.draw(screen, screen_width, screen_height, x_pixel_pos,
                                y_pixel_pos, cell_side_length)
 
     def draw_rectangle(self, screen, color, x_position, y_position, cell_side_length):

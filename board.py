@@ -5,6 +5,7 @@ import math
 import pygame
 from cell import Cell
 from checker import Checker
+from config import BOARD_LENGTH
 
 
 class Board():
@@ -12,11 +13,11 @@ class Board():
     # cells: list
     # length: number
 
-    def __init__(self, length):
-        if length % 2 is not 0:
+    def __init__(self):
+        self.length = BOARD_LENGTH
+        if self.length % 2 is not 0:
             raise Exception("Board length must be even")
         self.cells = []
-        self.length = length
         # list of cells used to make the grid
         for y in range(self.length):
             for x in range(self.length):
@@ -67,7 +68,12 @@ class Board():
         return True
 
     def draw(self, screen, screen_width, screen_height, font, selected_cell):
+        # Draw all the cells first so that the checkers can be drawn on top of them
         for cell in self.cells:
             is_selected_cell = (cell == selected_cell)
             cell.draw(screen, screen_width, screen_height,
                       font, self.length, is_selected_cell)
+
+        for cell in self.cells:
+            cell.draw_occupant(screen, screen_width, screen_height,
+                               font, self.length, is_selected_cell)

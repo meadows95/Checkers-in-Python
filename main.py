@@ -6,6 +6,7 @@ import time
 from re import X
 from tracemalloc import reset_peak
 import pygame
+from config import *
 
 from game import Game
 
@@ -16,9 +17,6 @@ DARKGREEN = (34, 69, 36)
 
 current_time = None
 start_time = None
-
-# This sets the margin between each cell
-DISTANCE_BETWEEN_CELLS = 8
 
 # Initialize pygame
 pygame.init()
@@ -45,7 +43,7 @@ win_lose_time = None
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
-board = Board(8)
+board = Board()
 board.populate_board()
 
 game = Game(board)
@@ -102,8 +100,8 @@ while not done:
     # if has_started_stopwatch:
     #     display_stopwatch()
 
-    # Limit to 60 frames per second
-    clock.tick(30)
+    # Limit to 24 frames per second
+    clock.tick(24)
 
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()

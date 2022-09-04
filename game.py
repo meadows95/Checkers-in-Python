@@ -1,8 +1,11 @@
 import random
+import time
+import threading
 
 import pygame
 
 from board import Board
+from config import CHECKER_ANIMATION_DURATION
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -32,13 +35,29 @@ class Game():
             self.show_player_turn(screen)
 
     def move_checker(self, from_cell, to_cell):
+        checker = from_cell.occupant
+        checker.previous_cell_x = from_cell.x
+        checker.previous_cell_y = from_cell.y
+        checker.is_animating = True
+        checker.animation_start_time = int(time.time() * 1000)
+
         to_cell.occupant = from_cell.occupant
         from_cell.occupant = None
 
+        timer = threading.Timer(
+            CHECKER_ANIMATION_DURATION / 1000, self.do_post_move_actions, [from_cell, to_cell])
+        timer.start()
+
+    def do_post_move_actions(self, from_cell, to_cell):
         self.potentially_make_a_queen(to_cell)
         self.potentially_remove_checker(to_cell, from_cell)
         self.check_for_winner()
+
+        # switch player turn
         self.player_turn = 1 if self.player_turn == 2 else 2
+
+        if self.player_turn == 1:
+            self.make_computer_turn()
 
 # returns a list of possible to_cells
     def get_possible_destinations_from_cell(self, from_cell):
@@ -141,7 +160,6 @@ class Game():
 
             if clicked_cell in destinations:
                 self.move_checker(self.selected_cell, clicked_cell)
-                self.make_computer_turn()
                 self.selected_cell = None
 
     def check_for_winner(self):
