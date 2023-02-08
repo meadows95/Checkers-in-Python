@@ -1,0 +1,11 @@
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+DARKGREEN = (34, 69, 36)
+RED = (255, 0, 0)
+
+# blue
+GAMEBOARD_COLOR = (66, 135, 245)
+# light blue
+NOT_GAMEBOARD_COLOR = (176, 222, 247)
+# light blue
+SELECTED_CELL_COLOR = (255, 255, 0)
