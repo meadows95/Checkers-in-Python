@@ -1,24 +1,16 @@
 from config import *
 import math
 import pygame
-
-BLACK = (0, 0, 0)
-# blue
-GAMEBOARD_COLOR = (66, 135, 245)
-# light blue
-NOT_GAMEBOARD_COLOR = (176, 222, 247)
-# light blue
-SELECTED_CELL_COLOR = (255, 255, 0)
-
+from colors import *
 
 class Cell():
     # properties: data type
-    # is_playable: boolean (when false, it is a cell that is not used in the game)
-    # x value: int
-    # y value: int
+    # x: int
+    # y: int
     # occupant: Checker or None. None means unoccupied
+    # color: tuple
 
-    def __init__(self, x, y, is_playable):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
         self.occupant = None
@@ -33,7 +25,7 @@ class Cell():
         else:
             return True
 
-    def draw(self, screen, screen_width, screen_height, font, board_length, is_selected_cell):
+    def draw(self, screen, screen_width, screen_height, board_length, is_selected_cell):
         cell_side_length = (screen_height // board_length) - \
             DISTANCE_BETWEEN_CELLS
         width_of_grid = cell_side_length * board_length + \
@@ -45,14 +37,14 @@ class Cell():
         y_pixel_pos = (DISTANCE_BETWEEN_CELLS + cell_side_length) * \
             self.y + DISTANCE_BETWEEN_CELLS
 
-        rect_obj = self.draw_rectangle(
+        self.draw_rectangle(
             screen,
             self.color if not is_selected_cell else SELECTED_CELL_COLOR,
             x_pixel_pos,
             y_pixel_pos,
             cell_side_length)
 
-    def draw_occupant(self, screen, screen_width, screen_height, font, board_length, is_selected_cell):
+    def draw_occupant(self, screen, screen_width, screen_height, board_length):
         cell_side_length = (screen_height // board_length) - \
             DISTANCE_BETWEEN_CELLS
         width_of_grid = cell_side_length * board_length + \
@@ -69,7 +61,7 @@ class Cell():
                                y_pixel_pos, cell_side_length)
 
     def draw_rectangle(self, screen, color, x_position, y_position, cell_side_length):
-        rect = pygame.draw.rect(
+        pygame.draw.rect(
             screen,
             color,
             [
@@ -78,14 +70,6 @@ class Cell():
                 cell_side_length,
                 cell_side_length
             ])
-
-        # if self.hidden:
-        #     #setting the color for each side of the hidden cell to appear raised
-        #     pygame.draw.rect(
-        #         screen,
-        #         HIDDEN_BORDER_COLOR_DARK,
-        #         [x_position - 0, y_position - 0, cell_side_length, cell_side_length],
-        #         2)
 
     def __eq__(self, other):
         if not other:

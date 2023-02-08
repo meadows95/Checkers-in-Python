@@ -1,21 +1,17 @@
 import random
 import time
 import threading
-
+from colors import *
 import pygame
 
-from board import Board
 from config import CHECKER_ANIMATION_DURATION
-
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
 
 class Game():
     # properties:
     # player_turn: int (1 or 2)
     # board: Board
     # selected_cell: Cell or None
+    # winner: int 
 
     def __init__(self, board):
         self.player_turn = random.randrange(1, 3)
@@ -44,6 +40,7 @@ class Game():
         to_cell.occupant = from_cell.occupant
         from_cell.occupant = None
 
+        # Delay move logic until animation finishes
         timer = threading.Timer(
             CHECKER_ANIMATION_DURATION / 1000, self.do_post_move_actions, [from_cell, to_cell])
         timer.start()
@@ -53,13 +50,13 @@ class Game():
         self.potentially_remove_checker(to_cell, from_cell)
         self.check_for_winner()
 
-        # switch player turn
+        # Switch player turn
         self.player_turn = 1 if self.player_turn == 2 else 2
 
         if self.player_turn == 1:
             self.make_computer_turn()
 
-# returns a list of possible to_cells
+    # Returns a list of possible to_cells
     def get_possible_destinations_from_cell(self, from_cell):
         if from_cell.occupant == None:
             return []
@@ -168,7 +165,6 @@ class Game():
         for cell in self.board.cells:
             if cell.occupant == None:
                 continue
-
             if cell.occupant.player == 1:
                 player_1_count = player_1_count + 1
             if cell.occupant.player == 2:
@@ -176,34 +172,20 @@ class Game():
         if player_1_count == 0:
             self.winner = 2
         elif player_2_count == 0:
-            self.winner = 2
+            self.winner = 1
 
     def show_player_turn(self, screen):
         font = pygame.font.Font('freesansbold.ttf', 30)
-        # create a text surface object,
-        # on which text is drawn on it.
         text = font.render('Player turn: ' +
                            str(self.player_turn), True, BLACK, WHITE)
-
-        # create a rectangular object for the
-        # text surface object
         rect = pygame.Rect(40, 40, 140, 32)
-
-        # set the center of the rectangular object.
         rect.center = (70, 20)
         screen.blit(text, rect)
 
     def player_wins_text(self, screen):
         font = pygame.font.Font('freesansbold.ttf', 30)
-        # create a text surface object,
-        # on which text is drawn on it.
         text = font.render('Winner: ' +
                            str(self.winner), True, BLACK, WHITE)
-
-        # create a rectangular object for the
-        # text surface object
         rect = pygame.Rect(40, 40, 140, 32)
-
-        # set the center of the rectangular object.
         rect.center = (70, 20)
         screen.blit(text, rect)

@@ -1,7 +1,5 @@
-
 import math
 from config import *
-
 
 def convert_cell_position_to_pixel_position(cell_x, cell_y, screen_width, screen_height):
     cell_side_length = (screen_height // BOARD_LENGTH) - \

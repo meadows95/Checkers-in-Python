@@ -2,18 +2,10 @@ import time
 import pygame
 from pygame.locals import *
 from graphicsutils import *
-
-from cell import Cell
-
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
+from colors import *
 
 
 class Checker():
-    # properties:
-    # player: int (1 or 2)
-    # is_queen: boolean
-    # is_animating: boolean
 
     def __init__(self, player):
         self.is_queen = False
@@ -59,8 +51,6 @@ class Checker():
 
         if self.is_queen:
             font = pygame.font.Font('freesansbold.ttf', 30)
-            # create a text surface object,
-            # on which text is drawn on it.
             text = font.render('Q', True, BLACK, self.color)
             screen.blit(text, drawn_checker)
 
