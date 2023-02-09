@@ -6,3 +6,5 @@ To run this project, the following software must be installed on your machine:
 ```
 pip install pygame
 ```
+
+![capture and queen](https://i.giphy.com/media/UWjunJQ4PGrCydgL7z/giphy.webp)
